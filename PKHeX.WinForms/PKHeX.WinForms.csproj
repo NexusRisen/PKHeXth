@@ -27,7 +27,7 @@
     <PublishReadyToRun>true</PublishReadyToRun>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
-    <SelfContained>false</SelfContained>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
