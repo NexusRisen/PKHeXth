@@ -39,7 +39,7 @@ jobs:
     - name: Determine release version and check existence
       id: check_release
       run: |
-        $baseVersion = "${{ steps.get_version.outputs.VERSION }}"
+        $baseVersion = $env:BASE_VERSION
         $changedFiles = git diff --name-only HEAD~1 HEAD
 
         # Check if this is a legality update
@@ -88,6 +88,7 @@ jobs:
         echo "Final release version: $releaseVersion"
       shell: pwsh
       env:
+        BASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
         GH_TOKEN: ${{ github.token }}
 
     - name: Restore dependencies
@@ -117,10 +118,10 @@ jobs:
     - name: Create or update release
       if: steps.get_changes.outputs.SHOULD_RELEASE == 'True'
       run: |
-        $version = "${{ steps.check_release.outputs.RELEASE_VERSION }}"
-        $baseVersion = "${{ steps.get_version.outputs.VERSION }}"
-        $releaseExists = "${{ steps.check_release.outputs.RELEASE_EXISTS }}"
-        $isLegalityUpdate = "${{ steps.check_release.outputs.IS_LEGALITY_UPDATE }}"
+        $version = $env:RELEASE_VERSION
+        $baseVersion = $env:BASE_VERSION
+        $releaseExists = $env:RELEASE_EXISTS
+        $isLegalityUpdate = $env:IS_LEGALITY_UPDATE
 
         # Prepare release notes based on update type
         if ($isLegalityUpdate -eq "True") {
@@ -204,5 +205,9 @@ jobs:
         }
       shell: pwsh
       env:
+        RELEASE_VERSION: ${{ steps.check_release.outputs.RELEASE_VERSION }}
+        BASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        RELEASE_EXISTS: ${{ steps.check_release.outputs.RELEASE_EXISTS }}
+        IS_LEGALITY_UPDATE: ${{ steps.check_release.outputs.IS_LEGALITY_UPDATE }}
         GH_TOKEN: ${{ github.token }}
 
