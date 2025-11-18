@@ -86,9 +86,14 @@ public static class UpdateUtil
             return null;
 
         var first = bodyIndex + bodyTag.Length;
-        var second = responseJson.IndexOf("\",\"", first, StringComparison.Ordinal);
+        // Find the closing quote - could be followed by "," or "}"
+        var second = responseJson.IndexOf("\",", first, StringComparison.Ordinal);
         if (second == -1)
-            return null;
+        {
+            second = responseJson.IndexOf("\"}", first, StringComparison.Ordinal);
+            if (second == -1)
+                return null;
+        }
 
         var changelog = responseJson[first..second];
         // Unescape JSON string
