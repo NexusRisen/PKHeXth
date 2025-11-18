@@ -317,7 +317,8 @@ timeout /t 1 /nobreak > nul
 copy /y ""{tempPath}"" ""{currentExe}"" > nul
 del ""{tempPath}"" > nul
 cd /d ""{workingDir}""
-start """" ""{currentExe}""
+start """" /d ""{workingDir}"" ""{currentExe}""
+timeout /t 2 /nobreak > nul
 del ""%~f0"" & exit";
 
             File.WriteAllText(scriptPath, script);
