@@ -10,7 +10,7 @@ public static class UpdateUtil
     /// <returns>A version representing the latest available version of PKHeX, or null if the latest version could not be determined</returns>
     public static Version? GetLatestPKHeXVersion()
     {
-        const string apiEndpoint = "https://api.github.com/repos/kwsch/pkhex/releases/latest";
+        const string apiEndpoint = "https://api.github.com/repos/NexusRisen/PKHeXth/releases/latest";
         var responseJson = NetUtil.GetStringFromURL(new Uri(apiEndpoint));
         if (responseJson is null)
             return null;
@@ -30,5 +30,35 @@ public static class UpdateUtil
 
         var tagString = responseJson.AsSpan()[first..second];
         return !Version.TryParse(tagString, out var latestVersion) ? null : latestVersion;
+    }
+
+    /// <summary>
+    /// Gets the download URL for the latest PKHeX release
+    /// </summary>
+    /// <returns>The download URL for the latest PKHeX.exe, or null if it could not be determined</returns>
+    public static string? GetLatestDownloadURL()
+    {
+        const string apiEndpoint = "https://api.github.com/repos/NexusRisen/PKHeXth/releases/latest";
+        var responseJson = NetUtil.GetStringFromURL(new Uri(apiEndpoint));
+        if (responseJson is null)
+            return null;
+
+        // Find the browser_download_url for PKHeX.exe
+        const string assetName = "\"name\":\"PKHeX.exe\"";
+        var assetIndex = responseJson.IndexOf(assetName, StringComparison.Ordinal);
+        if (assetIndex == -1)
+            return null;
+
+        const string urlTag = "\"browser_download_url\":\"";
+        var urlIndex = responseJson.IndexOf(urlTag, assetIndex, StringComparison.Ordinal);
+        if (urlIndex == -1)
+            return null;
+
+        var first = urlIndex + urlTag.Length;
+        var second = responseJson.IndexOf('"', first);
+        if (second == -1)
+            return null;
+
+        return responseJson[first..second];
     }
 }

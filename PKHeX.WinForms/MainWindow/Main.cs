@@ -155,9 +155,75 @@ public partial class Main : Form
     {
         var date = $"{2000 + version.Major:00}{version.Minor:00}{version.Build:00}";
         var lbl = L_UpdateAvailable;
-        lbl.Text = $"{MsgProgramUpdateAvailable} {date}";
-        lbl.Click += (_, _) => Process.Start(new ProcessStartInfo(ThreadPath) { UseShellExecute = true });
+        lbl.Text = $"{MsgProgramUpdateAvailable} {date} - Click to download";
+        lbl.Click += async (_, _) => await DownloadAndInstallUpdate(version);
         lbl.Visible = lbl.TabStop = lbl.Enabled = true;
+    }
+
+    private async Task DownloadAndInstallUpdate(Version version)
+    {
+        var result = MessageBox.Show(
+            $"A new version of PKHeX is available: {version}\n\nWould you like to download and install it now?\n\nPKHeX will restart after the update.",
+            "Update Available",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Information);
+
+        if (result != DialogResult.Yes)
+            return;
+
+        try
+        {
+            var downloadUrl = UpdateUtil.GetLatestDownloadURL();
+            if (downloadUrl is null)
+            {
+                MessageBox.Show("Could not retrieve download URL. Please download manually from GitHub.", "Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Process.Start(new ProcessStartInfo("https://github.com/NexusRisen/PKHeXth/releases/latest") { UseShellExecute = true });
+                return;
+            }
+
+            L_UpdateAvailable.Text = "Downloading update...";
+            var tempPath = Path.Combine(Path.GetTempPath(), "PKHeX_Update.exe");
+
+            using var client = new System.Net.Http.HttpClient();
+            var response = await client.GetAsync(downloadUrl);
+            response.EnsureSuccessStatusCode();
+
+            await using var fs = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            await response.Content.CopyToAsync(fs);
+            await fs.FlushAsync();
+            fs.Close();
+
+            // Create updater script
+            var currentExe = Environment.ProcessPath ?? "PKHeX.exe";
+            var scriptPath = Path.Combine(Path.GetTempPath(), "PKHeX_Update.bat");
+            var script = $@"@echo off
+timeout /t 2 /nobreak > nul
+taskkill /f /im PKHeX.exe > nul 2>&1
+timeout /t 1 /nobreak > nul
+copy /y ""{tempPath}"" ""{currentExe}"" > nul
+del ""{tempPath}"" > nul
+start """" ""{currentExe}""
+del ""%~f0"" & exit";
+
+            File.WriteAllText(scriptPath, script);
+
+            // Start updater and close current instance
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = scriptPath,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                WindowStyle = ProcessWindowStyle.Hidden
+            });
+
+            Application.Exit();
+        }
+        catch (Exception ex)
+        {
+            L_UpdateAvailable.Text = "Update failed - Click to retry";
+            MessageBox.Show($"Failed to download update: {ex.Message}\n\nPlease download manually from GitHub.", "Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Process.Start(new ProcessStartInfo("https://github.com/NexusRisen/PKHeXth/releases/latest") { UseShellExecute = true });
+        }
     }
 
     public static DrawConfig Draw { get; private set; } = new();
