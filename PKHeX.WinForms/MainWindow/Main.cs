@@ -162,11 +162,66 @@ public partial class Main : Form
 
     private async Task DownloadAndInstallUpdate(Version version)
     {
-        var result = MessageBox.Show(
-            $"A new version of PKHeX is available: {version}\n\nWould you like to download and install it now?\n\nPKHeX will restart after the update.",
-            "Update Available",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Information);
+        // Fetch and display changelog
+        var changelog = UpdateUtil.GetLatestChangelog();
+        if (changelog is null)
+            changelog = "Unable to fetch changelog. Check GitHub for details.";
+
+        // Show changelog in a custom form
+        using var changelogForm = new Form
+        {
+            Text = $"Update Available - v{version}",
+            Width = 700,
+            Height = 500,
+            StartPosition = FormStartPosition.CenterParent,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MaximizeBox = false,
+            MinimizeBox = false
+        };
+
+        var textBox = new TextBox
+        {
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Vertical,
+            Dock = DockStyle.Fill,
+            Text = changelog,
+            Font = new System.Drawing.Font("Segoe UI", 9F),
+            BackColor = System.Drawing.Color.White
+        };
+
+        var buttonPanel = new Panel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 50
+        };
+
+        var btnUpdate = new Button
+        {
+            Text = "Download && Install",
+            Width = 130,
+            Height = 30,
+            DialogResult = DialogResult.Yes,
+            Location = new System.Drawing.Point(450, 10)
+        };
+
+        var btnCancel = new Button
+        {
+            Text = "Cancel",
+            Width = 100,
+            Height = 30,
+            DialogResult = DialogResult.No,
+            Location = new System.Drawing.Point(590, 10)
+        };
+
+        buttonPanel.Controls.Add(btnUpdate);
+        buttonPanel.Controls.Add(btnCancel);
+        changelogForm.Controls.Add(textBox);
+        changelogForm.Controls.Add(buttonPanel);
+        changelogForm.AcceptButton = btnUpdate;
+        changelogForm.CancelButton = btnCancel;
+
+        var result = changelogForm.ShowDialog(this);
 
         if (result != DialogResult.Yes)
             return;

@@ -61,4 +61,38 @@ public static class UpdateUtil
 
         return responseJson[first..second];
     }
+
+    /// <summary>
+    /// Gets the changelog/release notes for the latest PKHeX release
+    /// </summary>
+    /// <returns>The changelog text, or null if it could not be determined</returns>
+    public static string? GetLatestChangelog()
+    {
+        const string apiEndpoint = "https://api.github.com/repos/NexusRisen/PKHeXth/releases/latest";
+        var responseJson = NetUtil.GetStringFromURL(new Uri(apiEndpoint));
+        if (responseJson is null)
+            return null;
+
+        // Find the body field which contains the changelog
+        const string bodyTag = "\"body\":\"";
+        var bodyIndex = responseJson.IndexOf(bodyTag, StringComparison.Ordinal);
+        if (bodyIndex == -1)
+            return null;
+
+        var first = bodyIndex + bodyTag.Length;
+        var second = responseJson.IndexOf("\",\"", first, StringComparison.Ordinal);
+        if (second == -1)
+            return null;
+
+        var changelog = responseJson[first..second];
+        // Unescape JSON string
+        changelog = changelog.Replace("\\n", "\n")
+                             .Replace("\\r", "\r")
+                             .Replace("\\t", "\t")
+                             .Replace("\\\"", "\"")
+                             .Replace("\\/", "/")
+                             .Replace("\\\\", "\\");
+
+        return changelog;
+    }
 }
