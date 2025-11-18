@@ -102,13 +102,85 @@ public static class UpdateUtil
             using var document = JsonDocument.Parse(responseJson);
             var root = document.RootElement;
             if (root.TryGetProperty("body", out var bodyElement))
-                return bodyElement.GetString();
+            {
+                var rawChangelog = bodyElement.GetString();
+                return FormatChangelog(rawChangelog);
+            }
             return null;
         }
         catch
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Formats the raw changelog text into a more structured and formal presentation
+    /// </summary>
+    /// <param name="rawChangelog">The raw changelog text from GitHub</param>
+    /// <returns>Formatted changelog text</returns>
+    private static string? FormatChangelog(string? rawChangelog)
+    {
+        if (string.IsNullOrWhiteSpace(rawChangelog))
+            return rawChangelog;
+
+        var lines = rawChangelog.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        var formatted = new System.Text.StringBuilder();
+
+        formatted.AppendLine("═══════════════════════════════════════════════════════════════");
+        formatted.AppendLine("                         RELEASE NOTES");
+        formatted.AppendLine("═══════════════════════════════════════════════════════════════");
+        formatted.AppendLine();
+
+        foreach (var line in lines)
+        {
+            var trimmedLine = line.Trim();
+
+            // Skip empty lines
+            if (string.IsNullOrWhiteSpace(trimmedLine))
+            {
+                formatted.AppendLine();
+                continue;
+            }
+
+            // Format section headers (lines that start with ## or single #)
+            if (trimmedLine.StartsWith("## "))
+            {
+                formatted.AppendLine();
+                formatted.AppendLine("───────────────────────────────────────────────────────────────");
+                formatted.AppendLine($"  {trimmedLine[3..].ToUpperInvariant()}");
+                formatted.AppendLine("───────────────────────────────────────────────────────────────");
+                formatted.AppendLine();
+            }
+            else if (trimmedLine.StartsWith("# "))
+            {
+                formatted.AppendLine();
+                formatted.AppendLine("═══════════════════════════════════════════════════════════════");
+                formatted.AppendLine($"  {trimmedLine[2..].ToUpperInvariant()}");
+                formatted.AppendLine("═══════════════════════════════════════════════════════════════");
+                formatted.AppendLine();
+            }
+            // Format bullet points
+            else if (trimmedLine.StartsWith("- ") || trimmedLine.StartsWith("* "))
+            {
+                formatted.AppendLine($"  • {trimmedLine[2..]}");
+            }
+            // Format numbered lists
+            else if (char.IsDigit(trimmedLine[0]) && trimmedLine.Length > 2 && trimmedLine[1..3].Contains('.'))
+            {
+                formatted.AppendLine($"  {trimmedLine}");
+            }
+            // Regular text with indentation
+            else
+            {
+                formatted.AppendLine($"  {trimmedLine}");
+            }
+        }
+
+        formatted.AppendLine();
+        formatted.AppendLine("═══════════════════════════════════════════════════════════════");
+
+        return formatted.ToString();
     }
 
 }

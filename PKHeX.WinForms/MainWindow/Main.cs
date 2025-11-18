@@ -240,7 +240,7 @@ public partial class Main : Form
             ScrollBars = ScrollBars.Vertical,
             Dock = DockStyle.Fill,
             Text = changelog,
-            Font = new System.Drawing.Font("Segoe UI", 9F),
+            Font = new System.Drawing.Font("Consolas", 9F),
             BackColor = System.Drawing.Color.White
         };
 
