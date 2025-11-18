@@ -308,6 +308,7 @@ public partial class Main : Form
 
             // Create updater script
             var currentExe = Environment.ProcessPath ?? "PKHeX.exe";
+            var workingDir = Path.GetDirectoryName(currentExe) ?? Directory.GetCurrentDirectory();
             var scriptPath = Path.Combine(Path.GetTempPath(), "PKHeX_Update.bat");
             var script = $@"@echo off
 timeout /t 2 /nobreak > nul
@@ -315,6 +316,7 @@ taskkill /f /im PKHeX.exe > nul 2>&1
 timeout /t 1 /nobreak > nul
 copy /y ""{tempPath}"" ""{currentExe}"" > nul
 del ""{tempPath}"" > nul
+cd /d ""{workingDir}""
 start """" ""{currentExe}""
 del ""%~f0"" & exit";
 
