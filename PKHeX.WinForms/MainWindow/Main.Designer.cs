@@ -17,6 +17,11 @@ namespace PKHeX.WinForms
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                UpdateCheckTimer?.Stop();
+                UpdateCheckTimer?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

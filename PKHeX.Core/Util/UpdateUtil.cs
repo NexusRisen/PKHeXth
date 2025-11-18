@@ -1,14 +1,15 @@
 using System;
+using System.Text.Json;
 
 namespace PKHeX.Core;
 
 public static class UpdateUtil
 {
     /// <summary>
-    /// Gets the latest version of PKHeX according to the GitHub API
+    /// Gets the latest GitHub release version and tag name
     /// </summary>
-    /// <returns>A version representing the latest available version of PKHeX, or null if the latest version could not be determined</returns>
-    public static Version? GetLatestPKHeXVersion()
+    /// <returns>A tuple containing the parsed version and the original tag name, or null if the latest version could not be determined</returns>
+    public static (Version Version, string TagName)? GetLatestGitHubRelease()
     {
         const string apiEndpoint = "https://api.github.com/repos/NexusRisen/PKHeXth/releases/latest";
         var responseJson = NetUtil.GetStringFromURL(new Uri(apiEndpoint));
@@ -29,13 +30,25 @@ public static class UpdateUtil
             return null;
 
         var tagString = responseJson[first..second];
-        // Strip 'v' prefix and anything after '-' (like '-test', '-changelog')
+        var originalTag = tagString;
+
+        // Strip 'v' prefix and anything after '-' (like '-test', '-changelog') for version parsing
         if (tagString.StartsWith('v'))
             tagString = tagString[1..];
         var dashIndex = tagString.IndexOf('-');
         if (dashIndex > 0)
             tagString = tagString[..dashIndex];
-        return !Version.TryParse(tagString, out var latestVersion) ? null : latestVersion;
+
+        return !Version.TryParse(tagString, out var latestVersion) ? null : (latestVersion, originalTag);
+    }
+
+    /// <summary>
+    /// Gets the latest version of PKHeX according to the GitHub API
+    /// </summary>
+    /// <returns>A version representing the latest available version of PKHeX, or null if the latest version could not be determined</returns>
+    public static Version? GetLatestPKHeXVersion()
+    {
+        return GetLatestGitHubRelease()?.Version;
     }
 
     /// <summary>
@@ -49,23 +62,28 @@ public static class UpdateUtil
         if (responseJson is null)
             return null;
 
-        // Find the browser_download_url for PKHeX.exe
-        const string assetName = "\"name\":\"PKHeX.exe\"";
-        var assetIndex = responseJson.IndexOf(assetName, StringComparison.Ordinal);
-        if (assetIndex == -1)
-            return null;
+        try
+        {
+            using var document = JsonDocument.Parse(responseJson);
+            var root = document.RootElement;
+            if (!root.TryGetProperty("assets", out var assetsElement))
+                return null;
 
-        const string urlTag = "\"browser_download_url\":\"";
-        var urlIndex = responseJson.IndexOf(urlTag, assetIndex, StringComparison.Ordinal);
-        if (urlIndex == -1)
+            foreach (var asset in assetsElement.EnumerateArray())
+            {
+                if (asset.TryGetProperty("name", out var nameElement) &&
+                    nameElement.GetString() == "PKHeX.exe" &&
+                    asset.TryGetProperty("browser_download_url", out var urlElement))
+                {
+                    return urlElement.GetString();
+                }
+            }
             return null;
-
-        var first = urlIndex + urlTag.Length;
-        var second = responseJson.IndexOf('"', first);
-        if (second == -1)
+        }
+        catch
+        {
             return null;
-
-        return responseJson[first..second];
+        }
     }
 
     /// <summary>
@@ -79,31 +97,18 @@ public static class UpdateUtil
         if (responseJson is null)
             return null;
 
-        // Find the body field which contains the changelog
-        const string bodyTag = "\"body\":\"";
-        var bodyIndex = responseJson.IndexOf(bodyTag, StringComparison.Ordinal);
-        if (bodyIndex == -1)
-            return null;
-
-        var first = bodyIndex + bodyTag.Length;
-        // Find the closing quote - could be followed by "," or "}"
-        var second = responseJson.IndexOf("\",", first, StringComparison.Ordinal);
-        if (second == -1)
+        try
         {
-            second = responseJson.IndexOf("\"}", first, StringComparison.Ordinal);
-            if (second == -1)
-                return null;
+            using var document = JsonDocument.Parse(responseJson);
+            var root = document.RootElement;
+            if (root.TryGetProperty("body", out var bodyElement))
+                return bodyElement.GetString();
+            return null;
         }
-
-        var changelog = responseJson[first..second];
-        // Unescape JSON string
-        changelog = changelog.Replace("\\n", "\n")
-                             .Replace("\\r", "\r")
-                             .Replace("\\t", "\t")
-                             .Replace("\\\"", "\"")
-                             .Replace("\\/", "/")
-                             .Replace("\\\\", "\\");
-
-        return changelog;
+        catch
+        {
+            return null;
+        }
     }
+
 }

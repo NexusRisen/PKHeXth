@@ -62,6 +62,8 @@ public partial class Main : Form
     public static bool HaX => Program.HaX;
     private static List<IPlugin> Plugins { get; } = [];
     private static PluginLoadResult? PluginLoadResult { get; set; } // keep alive so that plugins may load their external dependencies if needed
+    private System.Windows.Forms.Timer? UpdateCheckTimer;
+    private bool UpdateNotificationShown = false;
     #endregion
 
     #region Path Variables
@@ -135,32 +137,84 @@ public partial class Main : Form
 
     public async Task CheckForUpdates()
     {
-        Version? latestVersion;
+        // Display current GitHub version if available
+        var currentGitHubTag = Settings.Startup.GitHubVersion;
+        if (!string.IsNullOrEmpty(currentGitHubTag))
+        {
+            while (!IsHandleCreated) // Wait for form to be ready
+                await Task.Delay(500).ConfigureAwait(false);
+            await InvokeAsync(() => DisplayCurrentVersion(currentGitHubTag)).ConfigureAwait(false);
+        }
+
+        // Check for updates
+        (Version Version, string TagName)? latestRelease;
         // User might not be connected to the internet or with a flaky connection.
-        try { latestVersion = UpdateUtil.GetLatestPKHeXVersion(); }
+        try { latestRelease = UpdateUtil.GetLatestGitHubRelease(); }
         catch (Exception ex)
         {
             Debug.WriteLine($"Exception while checking for latest version: {ex}");
             return;
         }
-        if (latestVersion is null || latestVersion <= Program.CurrentVersion)
+
+        if (latestRelease is null)
             return;
+
+        var (latestVersion, latestTag) = latestRelease.Value;
+
+        // Compare versions - if current tag is set, compare tags; otherwise compare PKHeX version
+        bool updateAvailable;
+        if (!string.IsNullOrEmpty(currentGitHubTag))
+        {
+            updateAvailable = currentGitHubTag != latestTag;
+        }
+        else
+        {
+            updateAvailable = latestVersion > Program.CurrentVersion;
+        }
+
+        if (!updateAvailable)
+            return;
+
+        // Only show notification once per session
+        if (UpdateNotificationShown)
+            return;
+
+        UpdateNotificationShown = true;
 
         while (!IsHandleCreated) // Wait for form to be ready
             await Task.Delay(2_000).ConfigureAwait(false);
-        await InvokeAsync(() => NotifyNewVersionAvailable(latestVersion)).ConfigureAwait(false); // invoke on GUI thread
+        await InvokeAsync(() => NotifyNewVersionAvailable(latestVersion, latestTag)).ConfigureAwait(false); // invoke on GUI thread
     }
 
-    private void NotifyNewVersionAvailable(Version version)
+    public void StartUpdateCheckTimer()
     {
-        var date = $"{2000 + version.Major:00}{version.Minor:00}{version.Build:00}";
+        // Check for updates every 5 minutes while the program is running for near-instant notifications
+        UpdateCheckTimer = new System.Windows.Forms.Timer
+        {
+            Interval = 5 * 60 * 1000 // 5 minutes in milliseconds
+        };
+        UpdateCheckTimer.Tick += async (_, _) => await Task.Run(CheckForUpdates);
+        UpdateCheckTimer.Start();
+    }
+
+    private void DisplayCurrentVersion(string gitHubTag)
+    {
         var lbl = L_UpdateAvailable;
-        lbl.Text = $"{MsgProgramUpdateAvailable} {date} - Click to download";
-        lbl.Click += async (_, _) => await DownloadAndInstallUpdate(version);
+        lbl.Text = $"GitHub Version: {gitHubTag}";
+        lbl.Visible = true;
+        lbl.Enabled = false;
+        lbl.TabStop = false;
+    }
+
+    private void NotifyNewVersionAvailable(Version version, string tagName)
+    {
+        var lbl = L_UpdateAvailable;
+        lbl.Text = $"{MsgProgramUpdateAvailable} {tagName} - Click to download";
+        lbl.Click += async (_, _) => await DownloadAndInstallUpdate(version, tagName);
         lbl.Visible = lbl.TabStop = lbl.Enabled = true;
     }
 
-    private async Task DownloadAndInstallUpdate(Version version)
+    private async Task DownloadAndInstallUpdate(Version version, string tagName)
     {
         // Fetch and display changelog
         var changelog = UpdateUtil.GetLatestChangelog();
@@ -170,7 +224,7 @@ public partial class Main : Form
         // Show changelog in a custom form
         using var changelogForm = new Form
         {
-            Text = $"Update Available - v{version}",
+            Text = $"Update Available - {tagName}",
             Width = 700,
             Height = 500,
             StartPosition = FormStartPosition.CenterParent,
@@ -247,6 +301,10 @@ public partial class Main : Form
             await response.Content.CopyToAsync(fs);
             await fs.FlushAsync();
             fs.Close();
+
+            // Save the GitHub version tag to settings before updating
+            Settings.Startup.GitHubVersion = tagName;
+            await PKHeXSettings.SaveSettings(Program.PathConfig, Settings);
 
             // Create updater script
             var currentExe = Environment.ProcessPath ?? "PKHeX.exe";

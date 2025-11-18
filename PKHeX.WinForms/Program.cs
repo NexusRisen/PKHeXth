@@ -96,6 +96,7 @@ internal static class Program
                 main.PromptBackup(settings.LocalResources.GetBackupPath());
 
             Task.Run(main.CheckForUpdates);
+            main.StartUpdateCheckTimer();
         };
 
         // Setup complete.

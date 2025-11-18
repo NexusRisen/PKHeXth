@@ -11,6 +11,10 @@ public sealed class StartupSettings : IStartupSettings
     [LocalizedDescription("Last version that the program was run with.")]
     public string Version { get; set; } = string.Empty;
 
+    [Browsable(false)]
+    [LocalizedDescription("GitHub release tag/version for this installation.")]
+    public string GitHubVersion { get; set; } = string.Empty;
+
     [LocalizedDescription("Use the Dark color mode for the application on startup.")]
     public bool DarkMode { get; set; }
 

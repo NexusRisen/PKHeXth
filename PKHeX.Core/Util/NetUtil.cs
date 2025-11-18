@@ -24,12 +24,14 @@ public static class NetUtil
     {
         try
         {
-            var stream = GetStreamFromURL(url);
-            if (stream is null)
+            using var client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(30);
+            client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
+            var response = client.GetAsync(url).Result;
+            if (!response.IsSuccessStatusCode)
                 return null;
 
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
+            return response.Content.ReadAsStringAsync().Result;
         }
         // No internet?
         catch (Exception e)
@@ -41,13 +43,4 @@ public static class NetUtil
 
     // The GitHub API will fail if no user agent is provided. Use a hardcoded one to avoid issues.
     private const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
-
-    private static Stream? GetStreamFromURL(Uri url)
-    {
-        using var client = new HttpClient();
-        client.Timeout = TimeSpan.FromSeconds(3);
-        client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
-        var response = client.GetAsync(url).Result;
-        return response.IsSuccessStatusCode ? response.Content.ReadAsStream() : null;
-    }
 }
