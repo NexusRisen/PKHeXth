@@ -25,7 +25,7 @@ public static class NetUtil
         try
         {
             using var client = new HttpClient();
-            client.Timeout = TimeSpan.FromSeconds(30);
+            client.Timeout = TimeSpan.FromSeconds(9999);
             client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
             var response = client.GetAsync(url).Result;
             if (!response.IsSuccessStatusCode)

@@ -294,6 +294,7 @@ public partial class Main : Form
             var tempPath = Path.Combine(Path.GetTempPath(), "PKHeX_Update.exe");
 
             using var client = new System.Net.Http.HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(9999);
             var response = await client.GetAsync(downloadUrl);
             response.EnsureSuccessStatusCode();
 
@@ -311,14 +312,12 @@ public partial class Main : Form
             var workingDir = Path.GetDirectoryName(currentExe) ?? Directory.GetCurrentDirectory();
             var scriptPath = Path.Combine(Path.GetTempPath(), "PKHeX_Update.bat");
             var script = $@"@echo off
-timeout /t 2 /nobreak > nul
-taskkill /f /im PKHeX.exe > nul 2>&1
 timeout /t 1 /nobreak > nul
+taskkill /f /im PKHeX.exe > nul 2>&1
 copy /y ""{tempPath}"" ""{currentExe}"" > nul
 del ""{tempPath}"" > nul
 cd /d ""{workingDir}""
 start """" /d ""{workingDir}"" ""{currentExe}""
-timeout /t 2 /nobreak > nul
 del ""%~f0"" & exit";
 
             File.WriteAllText(scriptPath, script);
