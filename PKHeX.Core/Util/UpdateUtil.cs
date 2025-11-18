@@ -28,7 +28,13 @@ public static class UpdateUtil
         if (second == -1)
             return null;
 
-        var tagString = responseJson.AsSpan()[first..second];
+        var tagString = responseJson[first..second];
+        // Strip 'v' prefix and anything after '-' (like '-test', '-changelog')
+        if (tagString.StartsWith('v'))
+            tagString = tagString[1..];
+        var dashIndex = tagString.IndexOf('-');
+        if (dashIndex > 0)
+            tagString = tagString[..dashIndex];
         return !Version.TryParse(tagString, out var latestVersion) ? null : latestVersion;
     }
 
