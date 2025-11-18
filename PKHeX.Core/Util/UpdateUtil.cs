@@ -32,8 +32,8 @@ public static class UpdateUtil
         var tagString = responseJson[first..second];
         var originalTag = tagString;
 
-        // Strip 'v' prefix and anything after '-' (like '-test', '-changelog') for version parsing
-        if (tagString.StartsWith('v'))
+        // Strip 'v' or 'V' prefix and anything after '-' (like '-test', '-changelog') for version parsing
+        if (tagString.StartsWith('v') || tagString.StartsWith('V'))
             tagString = tagString[1..];
         var dashIndex = tagString.IndexOf('-');
         if (dashIndex > 0)
