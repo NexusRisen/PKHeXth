@@ -13,7 +13,7 @@ public sealed class StartupSettings : IStartupSettings
 
     [Browsable(false)]
     [LocalizedDescription("GitHub release tag/version for this installation.")]
-    public string GitHubVersion { get; set; } = string.Empty;
+    public string GitHubVersion { get; set; } = "v1.0.0";
 
     [LocalizedDescription("Use the Dark color mode for the application on startup.")]
     public bool DarkMode { get; set; }
