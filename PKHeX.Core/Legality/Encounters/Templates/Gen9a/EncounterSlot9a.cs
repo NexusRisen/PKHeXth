@@ -126,6 +126,9 @@ public sealed record EncounterSlot9a(EncounterArea9a Parent, ushort Species, byt
                 return EncounterMatchRating.DeferredErrors;
         }
 
+        if (Shiny is Shiny.Never && pk.IsShiny) // Some encounters are shiny locked until a sub-quest is completed.
+            return EncounterMatchRating.DeferredErrors;
+
         var pidiv = TryGetSeed(pk, out _);
         if (pidiv is SeedCorrelationResult.Invalid) // Only reject Invalid, allow Ignore
             return EncounterMatchRating.DeferredErrors;

@@ -31,11 +31,12 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
-  <Target Name="SignOutput" AfterTargets="Publish">
+  <!-- Temporarily disabled for faster builds -->
+  <!--<Target Name="SignOutput" AfterTargets="Publish">
     <Exec Condition="Exists('$(MSBuildProjectDirectory)\..\PKHeX_CodeSign_New.pfx')"
           Command="powershell -Command &quot;$pwd = ConvertTo-SecureString -String 'PKHeXSign2025' -Force -AsPlainText; $cert = Get-PfxCertificate -FilePath '$(MSBuildProjectDirectory)\..\PKHeX_CodeSign_New.pfx'; Set-AuthenticodeSignature -FilePath '$(PublishDir)PKHeX.exe' -Certificate $cert -HashAlgorithm SHA256 -TimestampServer 'http://timestamp.digicert.com'&quot;"
           ContinueOnError="true" />
-  </Target>
+  </Target>-->
 
   <ItemGroup>
     <ProjectReference Include="..\PKHeX.Core\PKHeX.Core.csproj" />
