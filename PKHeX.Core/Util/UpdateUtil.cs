@@ -8,12 +8,16 @@ public static class UpdateUtil
     /// <summary>
     /// Gets the latest GitHub release version and tag name
     /// </summary>
-    /// <returns>A tuple containing the parsed version and the original tag name, or null if the latest version could not be determined</returns>
+    /// <returns>A tuple containing the parsed version and the original tag name, or null if the latest version could not be determined or PKHeX.exe is not available</returns>
     public static (Version Version, string TagName)? GetLatestGitHubRelease()
     {
         const string apiEndpoint = "https://api.github.com/repos/NexusRisen/PKHeXth/releases/latest";
         var responseJson = NetUtil.GetStringFromURL(new Uri(apiEndpoint));
         if (responseJson is null)
+            return null;
+
+        // Verify that PKHeX.exe is available in the release assets before proceeding
+        if (!HasPKHeXExecutable(responseJson))
             return null;
 
         // Parse it manually; no need to parse the entire json to object.
@@ -40,6 +44,36 @@ public static class UpdateUtil
             tagString = tagString[..dashIndex];
 
         return !Version.TryParse(tagString, out var latestVersion) ? null : (latestVersion, originalTag);
+    }
+
+    /// <summary>
+    /// Checks if the release contains a PKHeX.exe asset
+    /// </summary>
+    /// <param name="responseJson">The JSON response from the GitHub API</param>
+    /// <returns>True if PKHeX.exe is available in the release, false otherwise</returns>
+    private static bool HasPKHeXExecutable(string responseJson)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(responseJson);
+            var root = document.RootElement;
+            if (!root.TryGetProperty("assets", out var assetsElement))
+                return false;
+
+            foreach (var asset in assetsElement.EnumerateArray())
+            {
+                if (asset.TryGetProperty("name", out var nameElement) &&
+                    nameElement.GetString() == "PKHeX.exe")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>
