@@ -125,6 +125,8 @@ public sealed record EncounterSlot9a(EncounterArea9a Parent, ushort Species, byt
             if (hasMoveInSlots && !pa9.GetMovePlusFlag(p.PlusMoveIndexes.IndexOf(alphaMove)))
                 return EncounterMatchRating.DeferredErrors;
         }
+        if (Shiny is Shiny.Never && pk.IsShiny) // Some encounters are shiny locked until a sub-quest is completed.
+            return EncounterMatchRating.DeferredErrors;
 
         if (Shiny is Shiny.Never && pk.IsShiny) // Some encounters are shiny locked until a sub-quest is completed.
             return EncounterMatchRating.DeferredErrors;
