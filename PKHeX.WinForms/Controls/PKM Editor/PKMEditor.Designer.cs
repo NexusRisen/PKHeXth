@@ -1298,9 +1298,9 @@ namespace PKHeX.WinForms.Controls
             CB_PKRSDays.TabIndex = 20;
             CB_PKRSDays.Visible = false;
             CB_PKRSDays.SelectedIndexChanged += UpdatePKRSdays;
-            // 
+            //
             // FLP_NSparkle
-            // 
+            //
             FLP_NSparkle.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             FLP_NSparkle.AutoSize = true;
             FLP_NSparkle.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
