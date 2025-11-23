@@ -1,13 +1,7 @@
 name: Auto-Release
 
 on:
-  push:
-    paths:
-      - 'PKHeX.WinForms/MainWindow/Plugins/**'
-      - 'PKHeX.Core/Resources/legality/**'
-    branches:
-      - main
-      - master
+  workflow_dispatch:
 
 permissions:
   contents: write
