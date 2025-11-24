@@ -3382,9 +3382,9 @@ namespace PKHeX.WinForms.Controls
             Tab_OTMisc.TabIndex = 4;
             Tab_OTMisc.Text = "OT/Misc";
             Tab_OTMisc.UseVisualStyleBackColor = true;
-            // 
+            //
             // B_PlusRecord
-            // 
+            //
             B_PlusRecord.AutoSize = true;
             B_PlusRecord.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             B_PlusRecord.Location = new System.Drawing.Point(293, 1);
