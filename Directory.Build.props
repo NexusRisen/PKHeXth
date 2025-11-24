@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <!-- GitHub Release: v1.0.9 - Updated PLZASeedFinder plugin from hexbyt3 upstream -->
-    <Version>1.0.9</Version>
+    <!-- GitHub Release: v1.1.0 - Merged kwsch upstream updates -->
+    <Version>1.1.0</Version>
     <LangVersion>13</LangVersion>
     <Nullable>enable</Nullable>
     <NeutralLanguage>en</NeutralLanguage>
