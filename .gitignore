@@ -234,8 +234,5 @@ pingme.txt
 *.userprefs
 
 
-#################
-## Claude Code
-#################
-
+# Local config
 .claude/
