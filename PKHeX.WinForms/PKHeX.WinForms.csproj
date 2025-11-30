@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
@@ -31,18 +31,32 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
-  <!-- Temporarily disabled for faster builds -->
-  <!--<Target Name="SignOutput" AfterTargets="Publish">
-    <Exec Condition="Exists('$(MSBuildProjectDirectory)\..\PKHeX_CodeSign_New.pfx')"
-          Command="powershell -Command &quot;$pwd = ConvertTo-SecureString -String 'PKHeXSign2025' -Force -AsPlainText; $cert = Get-PfxCertificate -FilePath '$(MSBuildProjectDirectory)\..\PKHeX_CodeSign_New.pfx'; Set-AuthenticodeSignature -FilePath '$(PublishDir)PKHeX.exe' -Certificate $cert -HashAlgorithm SHA256 -TimestampServer 'http://timestamp.digicert.com'&quot;"
-          ContinueOnError="true" />
-  </Target>-->
-
   <ItemGroup>
     <ProjectReference Include="..\PKHeX.Core\PKHeX.Core.csproj" />
     <ProjectReference Include="..\PKHeX.Drawing.Misc\PKHeX.Drawing.Misc.csproj" />
     <ProjectReference Include="..\PKHeX.Drawing.PokeSprite\PKHeX.Drawing.PokeSprite.csproj" />
     <ProjectReference Include="..\PKHeX.Drawing\PKHeX.Drawing.csproj" />
+    <!-- ALM Integration -->
+    <ProjectReference Include="..\..\ALM4SysBot\PKHeX.Core.AutoMod\PKHeX.Core.AutoMod.csproj" />
+    <ProjectReference Include="..\..\ALM4SysBot\PKHeX.Core.Enhancements\PKHeX.Core.Enhancements.csproj" />
+    <ProjectReference Include="..\..\ALM4SysBot\PKHeX.Core.Injection\PKHeX.Core.Injection.csproj" />
+    <ProjectReference Include="..\..\ALM4SysBot\AutoLegalityMod\AutoModPlugins.csproj" />
+    <!-- Seed Finder Plugins -->
+    <ProjectReference Include="..\..\SVSeedFinderPlugin\SVSeedFinderPlugin\SVSeedFinderPlugin.csproj" />
+    <ProjectReference Include="..\..\SWSHSeedFinderPlugin\SWSHSeedFinderPlugin\SWSHSeedFinderPlugin.csproj" />
+    <ProjectReference Include="..\..\PLZA-Seed-Finder\PLZASeedFinderPlugin\PLZASeedFinderPlugin.csproj" />
+    <!-- PKHeXPluginPile Plugins -->
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.Common\PluginPile.Common.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.FashionEditor\PluginPile.FashionEditor.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.RaidImporter\PluginPile.RaidImporter.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.RoamerTool\PluginPile.RoamerTool.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.Sorting\PluginPile.Sorting.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.SpecialPkmnFinder\PluginPile.SpecialPkmnFinder.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.SVivillon\PluginPile.SVivillon.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.SVProfilePictureViewer\PluginPile.SVProfilePictureViewer.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.SwShRulesExporter\PluginPile.SwShRulesExporter.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.TeamViewer\PluginPile.TeamViewer.csproj" />
+    <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.TMTool\PluginPile.TMTool.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,32 +77,6 @@
   <ItemGroup>
     <EmbeddedResource Update="Subforms\Save Editors\SAV_Inventory.resx">
       <DependentUpon>SAV_Inventory.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="MainWindow\Plugins\AutoModPlugins.dll" />
-    <None Remove="MainWindow\Plugins\PLZASeedFinderPlugin.dll" />
-    <None Remove="MainWindow\Plugins\SpindaPatternPlugin.dll" />
-    <None Remove="MainWindow\Plugins\SVSeedFinderPlugin.dll" />
-    <None Remove="MainWindow\Plugins\SWSHSeedFinderPlugin.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="MainWindow\Plugins\AutoModPlugins.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow\Plugins\PLZASeedFinderPlugin.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow\Plugins\SpindaPatternPlugin.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow\Plugins\SVSeedFinderPlugin.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow\Plugins\SWSHSeedFinderPlugin.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 

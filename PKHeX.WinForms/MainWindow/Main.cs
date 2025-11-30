@@ -377,6 +377,9 @@ del ""%~f0"" & exit";
             {
                 var customResult = PluginLoader.LoadPlugins(customPluginFolder, Plugins, Settings.Startup.PluginLoadMerged);
             }
+
+            // Load built-in AutoLegalityMod plugins
+            LoadBuiltInPlugins();
         }
         catch (InvalidCastException c)
         {
@@ -396,6 +399,41 @@ del ""%~f0"" & exit";
                 WinFormsUtil.Error(MsgPluginFailLoad, ex);
                 Plugins.Remove(p);
             }
+        }
+    }
+
+    private void LoadBuiltInPlugins()
+    {
+        // Load integrated AutoLegalityMod plugins
+        try
+        {
+            Plugins.Add(new AutoModPlugins.PasteImporter());
+            Plugins.Add(new AutoModPlugins.LegalizeBoxes());
+            Plugins.Add(new AutoModPlugins.LiveHeX());
+            Plugins.Add(new AutoModPlugins.MGDBDownloader());
+            Plugins.Add(new AutoModPlugins.ExportBoxToShowdown());
+            Plugins.Add(new AutoModPlugins.URLGenning());
+            Plugins.Add(new AutoModPlugins.SettingsEditor());
+
+            // Load integrated Seed Finder plugins
+            Plugins.Add(new SVSeedFinderPlugin.SVSeedFinderPlugin());
+            Plugins.Add(new SWSHSeedFinderPlugin.SWSHSeedFinderPlugin());
+            Plugins.Add(new PLZASeedFinderPlugin.PLZASeedFinderPlugin());
+
+            // Load PKHeXPluginPile plugins
+            Plugins.Add(new PluginPile.FashionEditor.FashionEditorPlugin());
+            Plugins.Add(new PluginPile.RaidImporter.RaidImportPlugin());
+            Plugins.Add(new PluginPile.RoamerTool.RoamerPlugin());
+            Plugins.Add(new PluginPile.Sorting.SortingPlugin());
+            Plugins.Add(new PluginPile.SpecialPkmnFinder.SpecialFinderPlugin());
+            Plugins.Add(new PluginPile.SVivillon.SVivillonPlugin());
+            Plugins.Add(new PluginPile.SVProfilePictureViewer.SVProfilePictureViewerPlugin());
+            Plugins.Add(new PluginPile.TeamViewer.TeamViewerPlugin());
+            Plugins.Add(new PluginPile.TMTool.TMTool());
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to load built-in plugins: {ex.Message}");
         }
     }
 
