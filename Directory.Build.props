@@ -1,7 +1,6 @@
 <Project>
   <PropertyGroup>
-    <!-- GitHub Release: v1.1.0 - Merged kwsch upstream updates -->
-    <Version>1.1.0</Version>
+    <Version>25.11.30</Version>
     <LangVersion>14</LangVersion>
     <Nullable>enable</Nullable>
     <NeutralLanguage>en</NeutralLanguage>
