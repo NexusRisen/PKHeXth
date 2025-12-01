@@ -57,11 +57,6 @@
     <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.SwShRulesExporter\PluginPile.SwShRulesExporter.csproj" />
     <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.TeamViewer\PluginPile.TeamViewer.csproj" />
     <ProjectReference Include="..\..\PKHeXPluginPile\PluginPile.TMTool\PluginPile.TMTool.csproj" />
-    <!-- PKHeXPluginPile Unmaintained Plugins -->
-    <ProjectReference Include="..\..\PKHeXPluginPile\Unmaintained\PluginPile.Unmaintained.AutoModQRPlugins\PluginPile.Unmaintained.AutoModQRPlugins.csproj" />
-    <ProjectReference Include="..\..\PKHeXPluginPile\Unmaintained\PluginPile.Unmaintained.BWTool\PluginPile.Unmaintained.BWTool.csproj" />
-    <ProjectReference Include="..\..\PKHeXPluginPile\Unmaintained\PluginPile.Unmaintained.SwShEventEditor\PluginPile.Unmaintained.SwShEventEditor.csproj" />
-    <ProjectReference Include="..\..\PKHeXPluginPile\Unmaintained\PluginPile.Unmaintained.SwShRaidTool\PluginPile.Unmaintained.SwShRaidTool.csproj" />
   </ItemGroup>
 
   <ItemGroup>
