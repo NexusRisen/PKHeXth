@@ -1,39 +1,94 @@
-![Screenshot 2025-11-10 151512](https://github.com/user-attachments/assets/9b116801-8935-4441-9bfe-d76192f84857)
-> [!important]
-> i hak so I made my own PKHeXth fork to tinker with.
-> It comes with plugins already installed that I and other people made, 
-> and some fixes/improvements that Lusamine keeps closing
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9b116801-8935-4441-9bfe-d76192f84857" alt="PKHeXth Banner" width="600"/>
+</p>
 
+<h1 align="center">PKHeXth</h1>
 
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/hexbyt3/pkhexth/total) ![GitHub Release](https://img.shields.io/github/v/release/hexbyt3/pkhexth)
+<p align="center">
+  <strong>Enhanced Pokémon Save File Editor with Pre-installed Plugins</strong>
+</p>
 
+<p align="center">
+  <a href="https://github.com/NexusRisen/PKHeXth/releases/latest"><img src="https://img.shields.io/github/v/release/NexusRisen/PKHeXth?style=for-the-badge&color=blue" alt="Latest Release"/></a>
+  <a href="https://github.com/NexusRisen/PKHeXth/releases"><img src="https://img.shields.io/github/downloads/NexusRisen/PKHeXth/total?style=for-the-badge&color=green" alt="Total Downloads"/></a>
+  <img src="https://img.shields.io/badge/License-GPLv3-blue?style=for-the-badge" alt="License"/>
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#pre-installed-plugins">Plugins</a> •
+  <a href="#download">Download</a> •
+  <a href="#building">Building</a> •
+  <a href="#supported-formats">Formats</a>
+</p>
 
 ---
+
 <div>
   <span>English</span> / <a href=".github/README-es.md">Español</a> / <a href=".github/README-fr.md">Français</a> / <a href=".github/README-de.md">Deutsch</a> / <a href=".github/README-it.md">Italiano</a> / <a href=".github/README-ko.md">한국어</a> / <a href=".github/README-zh-Hant.md">繁體中文</a> / <a href=".github/README-zh-Hans.md">简体中文</a>
 </div>
 
-![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
+---
 
-Pokémon core series save editor, programmed in [C#](https://en.wikipedia.org/wiki/C_Sharp_%28programming_language%29).
+## What is PKHeXth?
 
-Supports the following files:
-* Save files ("main", \*.sav, \*.dsv, \*.dat, \*.gci, \*.bin)
-* GameCube Memory Card files (\*.raw, \*.bin) containing GC Pokémon savegames.
-* Individual Pokémon entity files (.pk\*, \*.ck3, \*.xk3, \*.pb7, \*.sk2, \*.bk4, \*.rk4)
-* Mystery Gift files (\*.pgt, \*.pcd, \*.pgf, .wc\*) including conversion to .pk\*
-* Importing GO Park entities (\*.gp1) including conversion to .pb7
-* Importing teams from Decrypted 3DS Battle Videos
-* Transferring from one generation to another, converting formats along the way.
+PKHeXth is an enhanced fork of [PKHeX](https://github.com/kwsch/PKHeX) that comes **batteries-included** with popular plugins pre-installed and ready to use. No more hunting down plugins, dealing with compatibility issues, or manual setup — just download and go.
 
-Data is displayed in a view which can be edited and saved.
-The interface can be translated with resource/external text files so that different languages can be supported.
+This project combines the power of PKHeX with essential community plugins for a complete Pokémon save editing experience.
 
-Pokémon Showdown sets and QR codes can be imported/exported to assist in sharing.
+## Features
 
-PKHeX expects save files that are not encrypted with console-specific keys. Use a savedata manager to import and export savedata from the console ([Checkpoint](https://github.com/FlagBrew/Checkpoint), save_manager, [JKSM](https://github.com/J-D-K/JKSM), or SaveDataFiler).
+- **All-in-One Package** — Everything you need in a single download
+- **Auto Legality Mod (ALM)** — Generate legal Pokémon from Showdown sets instantly
+- **Live Injection** — Connect directly to your console via SysBot for real-time editing
+- **Seed Finders** — Find RNG seeds for Sword/Shield, Scarlet/Violet, and Legends: Arceus
+- **PluginPile Suite** — Fashion editing, raid importing, team viewing, and more
+- **Regular Updates** — Stays current with upstream PKHeX changes
+- **Code Signed** — Releases are signed for security
 
-**We do not support or condone cheating at the expense of others. Do not use significantly hacked Pokémon in battle or in trades with those who are unaware hacked Pokémon are in use.**
+## Pre-installed Plugins
+
+| Plugin | Description |
+|--------|-------------|
+| **Auto Legality Mod** | Generate legal Pokémon from Showdown paste/sets with one click |
+| **PKHeX.Core.Injection** | Live connection to Switch consoles via SysBot |
+| **SV Seed Finder** | Find and manipulate seeds in Scarlet/Violet |
+| **SWSH Seed Finder** | Find and manipulate seeds in Sword/Shield |
+| **PLZA Seed Finder** | Seed tools for Pokémon Legends: Arceus |
+| **Fashion Editor** | Edit trainer clothing and accessories |
+| **Raid Importer** | Import raid data directly |
+| **Roamer Tool** | Track and edit roaming Pokémon |
+| **Sorting Plugin** | Advanced box sorting options |
+| **Special Pokémon Finder** | Find special encounters and events |
+| **SV Vivillon Plugin** | Vivillon pattern tools for Scarlet/Violet |
+| **SV Profile Picture Viewer** | View saved profile pictures |
+| **SwSh Rules Exporter** | Export battle rules from Sword/Shield |
+| **Team Viewer** | View and manage teams |
+| **TM Tool** | TM/TR management utilities |
+
+## Download
+
+Get the latest release from the [Releases Page](https://github.com/NexusRisen/PKHeXth/releases/latest).
+
+### Requirements
+- Windows 10/11 (64-bit)
+- [.NET 9.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0) (or use the self-contained build)
+
+## Supported Formats
+
+| Type | Extensions |
+|------|------------|
+| **Save Files** | `main`, `.sav`, `.dsv`, `.dat`, `.gci`, `.bin` |
+| **Memory Cards** | `.raw`, `.bin` (GameCube) |
+| **Pokémon Files** | `.pk*`, `.ck3`, `.xk3`, `.pb7`, `.sk2`, `.bk4`, `.rk4` |
+| **Mystery Gifts** | `.pgt`, `.pcd`, `.pgf`, `.wc*` |
+| **GO Park** | `.gp1` |
+| **Battle Videos** | Decrypted 3DS battle videos |
+
+Additional capabilities:
+- Import/Export Showdown sets and QR codes
+- Convert between generations
+- Full Mystery Gift database included
 
 ## Screenshots
 
@@ -41,22 +96,41 @@ PKHeX expects save files that are not encrypted with console-specific keys. Use 
 
 ## Building
 
-PKHeX is a Windows Forms application which requires [.NET 9.0](https://dotnet.microsoft.com/download/dotnet/9.0).
+PKHeXth requires [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) and supports C# 13.
 
-The executable can be built with any compiler that supports C# 13.
+```bash
+# Clone the repository
+git clone https://github.com/NexusRisen/PKHeXth.git
 
-### Build Configurations
+# Build
+dotnet build PKHeX.sln -c Release
+```
 
-Use the Debug or Release build configurations when building. There isn't any platform specific code to worry about!
+Open `PKHeX.sln` in [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) or your preferred IDE.
 
-## Dependencies
+## Save Management
 
-PKHeX's QR code generation code is taken from [QRCoder](https://github.com/codebude/QRCoder), which is licensed under [the MIT license](https://github.com/codebude/QRCoder/blob/master/LICENSE.txt).
+PKHeX expects **decrypted** save files (not encrypted with console-specific keys). Use a save manager to export saves from your console:
 
-PKHeX's shiny sprite collection is taken from [pokesprite](https://github.com/msikma/pokesprite), which is licensed under [the MIT license](https://github.com/msikma/pokesprite/blob/master/LICENSE).
+- [Checkpoint](https://github.com/FlagBrew/Checkpoint) (3DS/Switch)
+- [JKSM](https://github.com/J-D-K/JKSM) (3DS)
+- SaveDataFiler
 
-PKHeX's Pokémon Legends: Arceus sprite collection is taken from the [National Pokédex - Icon Dex](https://www.deviantart.com/pikafan2000/art/National-Pokedex-Version-Delta-Icon-Dex-824897934) project and its abundance of collaborators and contributors.
+## Dependencies & Credits
 
-### IDE
+- [PKHeX](https://github.com/kwsch/PKHeX) by Kaphotics — The original save editor
+- [PKHeX-Plugins](https://github.com/architdate/PKHeX-Plugins) — Auto Legality Mod
+- [PluginPile](https://github.com/foPokemon/PluginPile) — Plugin suite
+- [QRCoder](https://github.com/codebude/QRCoder) — QR code generation (MIT License)
+- [pokesprite](https://github.com/msikma/pokesprite) — Shiny sprite collection (MIT License)
+- [National Pokédex Icon Dex](https://www.deviantart.com/pikafan2000/art/National-Pokedex-Version-Delta-Icon-Dex-824897934) — Legends: Arceus sprites
 
-PKHeX can be opened with IDEs such as [Visual Studio](https://visualstudio.microsoft.com/downloads/) by opening the .sln or .csproj file.
+## Disclaimer
+
+**We do not support or condone cheating at the expense of others.** Do not use significantly hacked Pokémon in battles or trades with those who are unaware that hacked Pokémon are in use.
+
+---
+
+<p align="center">
+  <sub>Made with care for the Pokémon community</sub>
+</p>
