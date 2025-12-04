@@ -42,7 +42,8 @@ This project combines the power of PKHeX with essential community plugins for a 
 - **Auto Legality Mod (ALM)** — Generate legal Pokémon from Showdown sets instantly
 - **Live Injection** — Connect directly to your console via SysBot for real-time editing
 - **Seed Finders** — Find RNG seeds for Sword/Shield, Scarlet/Violet, and Legends: Arceus
-- **PluginPile Suite** — Fashion editing, raid importing, team viewing, and more
+- **Living Dex Builder** — Build and track your Living Dex completion
+- **PluginPile Suite** — Fashion editing, raid importing, sorting, and more
 - **Regular Updates** — Stays current with upstream PKHeX changes
 - **Code Signed** — Releases are signed for security
 
@@ -60,11 +61,8 @@ This project combines the power of PKHeX with essential community plugins for a 
 | **Roamer Tool** | Track and edit roaming Pokémon |
 | **Sorting Plugin** | Advanced box sorting options |
 | **Special Pokémon Finder** | Find special encounters and events |
-| **SV Vivillon Plugin** | Vivillon pattern tools for Scarlet/Violet |
-| **SV Profile Picture Viewer** | View saved profile pictures |
 | **SwSh Rules Exporter** | Export battle rules from Sword/Shield |
-| **Team Viewer** | View and manage teams |
-| **TM Tool** | TM/TR management utilities |
+| **Living Dex Builder** | Build and track your Living Dex completion |
 
 ## Download
 
