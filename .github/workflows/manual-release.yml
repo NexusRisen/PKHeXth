@@ -65,7 +65,10 @@ jobs:
         } else {
           # Base version doesn't exist, create it
           $releaseVersion = $baseVersion
-          $buildVersion = $baseVersion
+          # Stamp a 4-part assembly version (.0) so even the initial release carries a
+          # revision component. This keeps official downloads distinguishable from
+          # locally-built copies (which have no revision) for the update check.
+          $buildVersion = "${baseVersion}.0"
           echo "Creating initial release: $releaseVersion"
         }
 

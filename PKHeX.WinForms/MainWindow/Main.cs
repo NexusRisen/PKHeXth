@@ -147,6 +147,14 @@ public partial class Main : Form
         if (latestVersion is null || latestVersion <= Program.CurrentVersion)
             return;
 
+        // Locally-built copies take their version from Directory.Build.props (e.g. "26.05.05"),
+        // which has no 4th "revision" component, so Program.CurrentVersion.Revision is -1.
+        // Published releases are tagged "-rev.N" and stamp the assembly as "26.05.05.N" (Revision >= 0).
+        // Without a stamped revision, a same-base local build always looks older and would prompt forever.
+        // Only nag official (revision-stamped) downloads; never nag an unofficial local build.
+        if (Program.CurrentVersion.Revision < 0)
+            return;
+
         while (!IsHandleCreated) // Wait for form to be ready
             await Task.Delay(2_000).ConfigureAwait(false);
         await InvokeAsync(() => NotifyNewVersionAvailable(latestVersion)).ConfigureAwait(false); // invoke on GUI thread
