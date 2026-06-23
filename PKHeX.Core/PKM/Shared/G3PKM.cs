@@ -29,6 +29,7 @@ public abstract class G3PKM : PKM, IRibbonSetEvent3, IRibbonSetCommon3, IRibbonS
     public sealed override uint PSV => ((PID >> 16) ^ (PID & 0xFFFF)) >> 3;
     public sealed override uint TSV => (uint)(TID16 ^ SID16) >> 3;
     public sealed override bool Japanese => Language == (int)LanguageID.Japanese;
+    public sealed override bool Korean => false; // even if language ID is hacked to Korean, don't return true (since it doesn't exist).
 
     public sealed override int Ability { get => PersonalInfo.GetAbility(AbilityBit); set { } }
     public sealed override uint EncryptionConstant { get => PID; set { } }
