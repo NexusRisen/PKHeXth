@@ -1,6 +1,15 @@
 <Project>
   <PropertyGroup>
     <Version>26.05.05</Version>
+    <!--
+      Pin AssemblyVersion to the base version (no release-revision component).
+      Release builds stamp the "-rev.N" counter into Version/FileVersion/InformationalVersion
+      (via -p:Version in manual-release.yml) so the update check can see it, but AssemblyVersion
+      must NOT carry it: ALM's compatibility check (ALMVersion.GetIsMismatch) compares PKHeX.Core's
+      AssemblyVersion against ALM's, and any bump (e.g. 26.5.5.7 > 26.5.5.0) trips a false mismatch.
+      Keep this equal to Version's Major.Minor.Build; update it (and rebuild ALM) when bumping the base.
+    -->
+    <AssemblyVersion>26.5.5.0</AssemblyVersion>
     <LangVersion>13</LangVersion>
     <Nullable>enable</Nullable>
     <NeutralLanguage>en</NeutralLanguage>
